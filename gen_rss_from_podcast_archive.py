@@ -1,5 +1,9 @@
 # pip install podgen
 # https://podgen.readthedocs.io/en/stable/user/basic_usage_guide/part_1.html
+#
+# get prepared for archived podcast files: 
+# 1. video files are stored locally at f"{path_base}/{show_title}/"
+# 2. video files are accssible online at f"{www_root}/{show_title}/"
 
 from podgen import Podcast, Episode, Media
 
