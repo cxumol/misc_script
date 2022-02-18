@@ -54,11 +54,11 @@ def complete_rss(www_root, path_base, show_title):
 def upload_rss(path_base):
     "upload xml to a pastebin"
     for xml in glob(f"{path_base}/"+"*.xml"):
-    print(xml.split('/')[-1])
-    # may use any pastebin you like
-    os.system(f'''
+        print(xml.split('/')[-1])
+        # may use any pastebin you like
+        os.system(f'''
 cat "{xml}" | curl -F 'tpaste=<-' https://tpaste.us/
-    ''')
+        ''')
 
 www_root = "https://example.com"
 path_base = "./archived"
