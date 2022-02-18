@@ -33,22 +33,22 @@ def gen_episodes(title, link):
 def complete_rss(www_root, path_base, show_title):
     """geneerate rss file in xml"""
     for pod_path in glob(f"{path_base}/{show_title}"):
-    pod_dir = pod_path.split('/')[-1]
-    print(pod_dir)
-    episode_path_list = sorted(glob(f"{pod_path}/"+"*"))
-                                   # ,key = lambda x:f"{int(x[x.find('Vol')+3:x.rfind('.')]):0>3d}" if '发刊词' not in x else x)
-                                   # please rearrage the order acrrodingly if required
+        pod_dir = pod_path.split('/')[-1]
+        print(pod_dir)
+        episode_path_list = sorted(glob(f"{pod_path}/"+"*"))
+                                       # ,key = lambda x:f"{int(x[x.find('Vol')+3:x.rfind('.')]):0>3d}" if '发刊词' not in x else x)
+                                       # please rearrage the order acrrodingly if required
 
-    p = gen_pod(pod_dir, "archived_yet_revived" , www_root+f'/{pod_dir}')
-    for episode_path in episode_path_list:
-        path_parts = episode_path.split('/')
+        p = gen_pod(pod_dir, "archived_yet_revived" , www_root+f'/{pod_dir}')
+        for episode_path in episode_path_list:
+            path_parts = episode_path.split('/')
 
-        episode_title = episode_path[episode_path.rfind('/')+1:episode_path.rfind('.')]
-        my_episode =  gen_episodes(episode_title, 
-                                   '/'.join([ www_root, path_parts[-2], path_parts[-1] ])
-                                   )
-        p.episodes.append(my_episode)
-    p.rss_file(f"{path_base}/{pod_dir}.xml", minimize=True, encoding = "UTF-8")
+            episode_title = episode_path[episode_path.rfind('/')+1:episode_path.rfind('.')]
+            my_episode =  gen_episodes(episode_title, 
+                                       '/'.join([ www_root, path_parts[-2], path_parts[-1] ])
+                                       )
+            p.episodes.append(my_episode)
+        p.rss_file(f"{path_base}/{pod_dir}.xml", minimize=True, encoding = "UTF-8")
 
 
 def upload_rss(path_base):
