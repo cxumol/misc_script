@@ -10,6 +10,7 @@ import os
 # p.episodes.append(my_episode)
 # p.rss_file('rss.xml', minimize=True, encoding = 'utf8')
 def gen_pod(name, description, website):
+    """fill in meta info about podcast"""
     p = Podcast()
     p.name = name
     p.description = description
@@ -21,6 +22,7 @@ def gen_pod(name, description, website):
     return p
 
 def gen_episodes(title, link):
+    """fill in info about rach episode"""
     my_episode = Episode()
     my_episode.title = title
     my_episode.media = retry(Media.create_from_server_response, 10, link)
@@ -29,7 +31,7 @@ def gen_episodes(title, link):
     return my_episode
 
 def complete_rss(www_root, path_base, show_title):
-
+    """geneerate rss file in xml"""
     for pod_path in glob(f"{path_base}/{show_title}"):
     pod_dir = pod_path.split('/')[-1]
     print(pod_dir)
@@ -47,6 +49,7 @@ def complete_rss(www_root, path_base, show_title):
 
 
 def upload_rss(path_base):
+    "upload xml to any pastebin"
     for xml in glob(f"{path_base}/"+"*.xml"):
     print(xml.split('/')[-1])
     os.system(f'''
