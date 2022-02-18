@@ -22,7 +22,7 @@ def gen_pod(name, description, website):
     return p
 
 def gen_episodes(title, link):
-    """fill in info about rach episode"""
+    """fill in info about each episode"""
     my_episode = Episode()
     my_episode.title = title
     my_episode.media = retry(Media.create_from_server_response, 10, link)
