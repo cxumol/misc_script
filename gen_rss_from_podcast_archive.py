@@ -35,8 +35,11 @@ def complete_rss(www_root, path_base, show_title):
     for pod_path in glob(f"{path_base}/{show_title}"):
     pod_dir = pod_path.split('/')[-1]
     print(pod_dir)
+    episode_path_list = sorted(glob(f"{pod_path}/"+"*"))
+                                   # ,key = lambda x:f"{int(x[x.find('Vol')+3:x.rfind('.')]):0>3d}" if '发刊词' not in x else x)
+                                   # please rearrage the order acrrodingly if required
 
-    p = gen_pod(pod_dir, "自制源" , www_root+f'/{pod_dir}')
+    p = gen_pod(pod_dir, "archived_yet_revived" , www_root+f'/{pod_dir}')
     for episode_path in episode_path_list:
         path_parts = episode_path.split('/')
 
@@ -49,9 +52,10 @@ def complete_rss(www_root, path_base, show_title):
 
 
 def upload_rss(path_base):
-    "upload xml to any pastebin"
+    "upload xml to a pastebin"
     for xml in glob(f"{path_base}/"+"*.xml"):
     print(xml.split('/')[-1])
+    # may use any pastebin you like
     os.system(f'''
 cat "{xml}" | curl -F 'tpaste=<-' https://tpaste.us/
     ''')
