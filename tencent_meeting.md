@@ -6,7 +6,7 @@
 
 > POST https://meeting.tencent.com/wemeet-tapi/v2/meetlog/public/record-detail/get-chapter
 
-1. jq `.chapter_list | map({"title","start_time"})`
+1. jq `.chapter_list | map({"title","start_time"})` || `chapter_list` > Copy Value
 2. js console
 
 ```js
@@ -28,8 +28,9 @@ console.log(result)
 ```
 ## transcriptions
 
-> POST https://meeting.tencent.com/wemeet-cloudrecording-webapi/v1/minutes/detail  
-> url query 的 limit 改大, 如 200
+1.  > POST https://meeting.tencent.com/wemeet-cloudrecording-webapi/v1/minutes/detail  
+    > url query 的 limit 改大, 如 200 || 移除 pid
+2.  `minuets > paragraphs` > Copy Value
 
 deno
 
