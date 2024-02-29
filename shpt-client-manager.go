@@ -110,14 +110,14 @@ func parseLog(log string) (time.Time, time.Time, error) {
 		return time.Time{}, time.Time{}, fmt.Errorf("invalid log format")
 	}
 
-	logTime, err := time.Parse(LogFormat, strings.Join(parts[:3], " "))
+	logTime, err := time.ParseInLocation(LogFormat, strings.Join(parts[:3], " "), getLoc())
 	if err != nil {
 		return time.Time{}, time.Time{}, err
 	}
 	// 因为 logTime 缺失了年份数据, 所以用当前的年份数据显示
 	logTime = time.Date(getTime().Year(), logTime.Month(), logTime.Day(), logTime.Hour(), logTime.Minute(), logTime.Second(), 0, getLoc())
 
-	tryTime, err := time.Parse(TryFormat, parts[len(parts)-1])
+	tryTime, err := time.ParseInLocation(TryFormat, parts[len(parts)-1], getLoc())
 	if err != nil {
 		return time.Time{}, time.Time{}, err
 	}
@@ -318,8 +318,10 @@ func main() {
 
 		_, latestTry, _ := parseLog(latestCmd.Log)
 		earliestCmd := findEarliestLog(commands, latestTry)
+		fmt.Println("latestCmd",latestCmd.Line)
+		fmt.Println("earliestCmd",earliestCmd.Line)
 
-		err := restartCommand(earliestCmd)
+		err := restartCommand(latestCmd)
 		if err != nil {
 			fmt.Println("Error restarting command:", err)
 			return
