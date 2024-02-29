@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
 	// "sync"
 	"syscall"
 	"time"
@@ -23,6 +24,24 @@ type Command struct {
 	Cmd     *exec.Cmd
 	Log     string
 	Started bool
+}
+
+var isLocal bool
+
+func getTime() time.Time {
+	if isLocal {
+		return time.Now()
+	} else {
+		return time.Now().UTC()
+	}
+}
+
+func getLoc() *time.Location {
+	if isLocal {
+		return time.Local
+	} else {
+		return time.UTC
+	}
 }
 
 // readCommands 从文件中读取命令
@@ -95,9 +114,8 @@ func parseLog(log string) (time.Time, time.Time, error) {
 	if err != nil {
 		return time.Time{}, time.Time{}, err
 	}
-
 	// 因为 logTime 缺失了年份数据, 所以用当前的年份数据显示
-	logTime = time.Date(time.Now().Year(), logTime.Month(), logTime.Day(), logTime.Hour(), logTime.Minute(), logTime.Second(), 0, time.Local)
+	logTime = time.Date(getTime().Year(), logTime.Month(), logTime.Day(), logTime.Hour(), logTime.Minute(), logTime.Second(), 0, getLoc())
 
 	tryTime, err := time.Parse(TryFormat, parts[len(parts)-1])
 	if err != nil {
@@ -105,7 +123,7 @@ func parseLog(log string) (time.Time, time.Time, error) {
 	}
 
 	// 设置 tryTime 的年份、月份和日份与 logTime 相同
-	tryTime = time.Date(time.Now().Year(), logTime.Month(), logTime.Day(), tryTime.Hour(), tryTime.Minute(), tryTime.Second(), 0,  time.Local)
+	tryTime = time.Date(getTime().Year(), logTime.Month(), logTime.Day(), tryTime.Hour(), tryTime.Minute(), logTime.Second(), 0, getLoc())
 
 	// 如果 tryTime 在 logTime 之前，说明它应该是明天的时间
 	if tryTime.Before(logTime) {
@@ -178,12 +196,12 @@ func findLatestTryAgain(commands []*Command, tryDelay time.Duration) *Command {
 		}
 
 		// 如果 tryTime 在当前时间 5 分钟以内，跳过这个命令
-		if time.Now().Add(tryDelay).After(tryTime) {
-			// fmt.Printf("[pid %d] tryTime= %s |SKIP| delayTime= %s\t", cmd.Line, time.Now().Add(tryDelay), tryTime)
+		if getTime().Add(tryDelay).After(tryTime) {
+			// fmt.Printf("[pid %d] delayedTime= %s |AFTER=SKIP| tryTime= %s\t", cmd.Line, time.Now().UTC().Add(tryDelay), tryTime)
 			time.Sleep(1 * time.Minute)
 			continue
 		}
-		// fmt.Printf("[pid %d] tryTime= %s || delayTime= %s\t", cmd.Line, time.Now().Add(tryDelay), tryTime)
+		// fmt.Printf("[pid %d] delayedTime= %s |BEFORE=RESTART| tryTime= %s\t", cmd.Line, time.Now().UTC().Add(tryDelay), tryTime)
 
 		if latestCmd == nil || tryTime.After(latestTry) {
 			latestCmd = cmd
@@ -217,7 +235,7 @@ func findEarliestLog(commands []*Command, latestTry time.Time) *Command {
 
 // restartCommand 重新启动命令
 func restartCommand(cmd *Command) error {
-	fmt.Printf("[process %d] Restart\n", cmd.Line)
+	fmt.Printf("[Restart %d] ...\n", cmd.Line)
 	if isProcessAlive(cmd.Cmd) || !cmd.Started {
 		cmd.Cmd.Process.Kill()
 		cmd.Cmd.Wait()
@@ -243,6 +261,7 @@ func main() {
 	// 读取命令
 	cmdFile := flag.String("c", "commands.txt", "file containing the commands to run")
 	tryDelay := flag.Duration("t", 5*time.Minute, "the delay before a command is tried again")
+	flag.BoolVar(&isLocal, "local", false, "set isLocal to true")
 	flag.Parse()
 	// commands, err := readCommands("commands.txt")
 	commands, err := readCommands(*cmdFile)
