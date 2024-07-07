@@ -169,7 +169,8 @@ func checkConditionA(commands []*Command) bool {
 // findStoppedCommand 查找已停止的命令
 func findStoppedCommand(commands []*Command) *Command {
 	for _, cmd := range commands {
-		if !isProcessAlive(cmd.Cmd) {
+		isProcessErr := strings.Contains(cmd.Log, "(error) Error UNKNOWN")
+		if !isProcessAlive(cmd.Cmd) || isProcessErr {
 			return cmd
 		}
 	}
