@@ -198,14 +198,16 @@ func findLatestTryAgain(commands []*Command, tryDelay time.Duration) *Command {
 		// 如果 tryTime 在当前时间 5 分钟以内，跳过这个命令
 		if getTime().Add(tryDelay).After(tryTime) {
 			// fmt.Printf("[pid %d] delayedTime= %s |AFTER=SKIP| tryTime= %s\t", cmd.Line, time.Now().UTC().Add(tryDelay), tryTime)
-			time.Sleep(1 * time.Minute)
+			// time.Sleep(1 * time.Minute)
 			continue
 		}
 		// fmt.Printf("[pid %d] delayedTime= %s |BEFORE=RESTART| tryTime= %s\t", cmd.Line, time.Now().UTC().Add(tryDelay), tryTime)
 
+		fmt.Printf("tryTime [", cmd.Line ,"]:", tryTime)
 		if latestCmd == nil || tryTime.After(latestTry) {
 			latestCmd = cmd
 			latestTry = tryTime
+			fmt.Println("latestTryTime update:", cmd.Line, ":", tryTime)
 		}
 	}
 	return latestCmd
