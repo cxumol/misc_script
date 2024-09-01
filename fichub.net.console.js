@@ -29,3 +29,14 @@ var fichubToWget = url => fetch(`https://fichub.net/api/v0/epub?q=${encodeURICom
 });
 var url = '';
 fichubToWget(url).then(cmd => copy(cmd));
+
+/* AO3 */
+
+var AO3ToWget = url => fetch(url).then(r => r.text()).then(html => {
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  var fullEpubUrl = doc.querySelector('li.download>ul>li:nth-child(2)>a').href; 
+  var baseFileName = new URL(fullEpubUrl).pathname.split('/').pop().split('?').shift();
+  var ans = `wget "${fullEpubUrl}" -O "${baseFileName}"`;console.log(ans);return ans;
+});
+var url = ''; // Replace with the actual URL
+AO3ToWget(url).then(cmd => copy(cmd));
