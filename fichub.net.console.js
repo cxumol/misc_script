@@ -31,11 +31,11 @@ var url = '';
 fichubToWget(url).then(cmd => copy(cmd));
 
 /* AO3 */
-
+//var baseFileName = new URL(fullEpubUrl).pathname.split('/').pop().split('?').shift();
 var AO3ToWget = url => fetch(url).then(r => r.text()).then(html => {
   var doc = new DOMParser().parseFromString(html, 'text/html');
   var fullEpubUrl = doc.querySelector('li.download>ul>li:nth-child(2)>a').href; 
-  var baseFileName = new URL(fullEpubUrl).pathname.split('/').pop().split('?').shift();
+  var baseFileName = doc.querySelector('h2.title').innerText.replaceAll(' ','_') + '-' + doc.querySelector('h3.byline').innerText;
   var ans = `wget "${fullEpubUrl}" -O "${baseFileName}"`;console.log(ans);return ans;
 });
 var url = ''; // Replace with the actual URL
