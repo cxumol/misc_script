@@ -35,8 +35,8 @@ fichubToWget(url).then(cmd => copy(cmd));
 var AO3ToWget = url => fetch(url).then(r => r.text()).then(html => {
   var doc = new DOMParser().parseFromString(html, 'text/html');
   var fullEpubUrl = doc.querySelector('li.download>ul>li:nth-child(2)>a').href; 
-  var baseFileName = doc.querySelector('h2.title').innerText.replaceAll(' ','_') + '-' + doc.querySelector('h3.byline').innerText;
-  var ans = `wget "${fullEpubUrl}" -O "${baseFileName}"`;console.log(ans);return ans;
+  var baseFileName = doc.querySelector('h2.title').innerText.trim().replaceAll(' ','_') + '-' + doc.querySelector('h3.byline').innerText.trim();
+  var ans = `wget "${fullEpubUrl}" -O "${baseFileName}.epub"`;console.log(ans);return ans;
 });
 var url = ''; // Replace with the actual URL
 AO3ToWget(url).then(cmd => copy(cmd));
