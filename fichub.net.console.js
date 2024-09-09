@@ -14,7 +14,7 @@ async function fichubToWget(url) {
   const fullEpubUrl = `https://fichub.net${data.epub_url}`;
   const baseFileName = new URL(fullEpubUrl).pathname.split('/').pop().split('-').slice(0, -1).join('-') + '.epub';
   const ans=`wget "${fullEpubUrl}" -O "${baseFileName}"`;
-  console.log(nas);
+  console.log(ans);
   return ans;
 }
 var url = '';
