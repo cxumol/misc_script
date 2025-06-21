@@ -11,6 +11,6 @@ i=0
 
 for url in $book_urls; do
     ua="${user_agents[$((i % num_uas))]}"
-    curl -A "$ua" "https://fichub.net/api/v0/epub?q=$url"
+    curl -sSL -A "$ua" "https://fichub.net/api/v0/epub?q=$url" | jq -r '.info'
     ((i++))
 done
