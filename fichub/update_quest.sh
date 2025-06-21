@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BOOK_LIST_URL=""
+BOOK_LIST_URL="https://github.com/cxumol/misc_script/raw/refs/heads/master/fichub/watchlist.json"
 UA_API="http://headers.scrapeops.io/v1/user-agents?api_key=6ed5ed82-1938-4ba2-9495-5291c4596945"
 
 book_urls=$(curl -s "$BOOK_LIST_URL" | jq -r '.[]')
