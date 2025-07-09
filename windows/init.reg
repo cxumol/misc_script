@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+; Disable Automatic Folder Type Discovery
+[HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+"FolderType"="NotSpecified"
+
+; https://github.com/Unit221B/Russian/blob/main/GoRussian.reg
+[HKEY_LOCAL_MACHINE\SYSTEM\Keyboard Layout\Preload]
+"1"="00000419"
+[HKEY_USERS\.DEFAULT\Keyboard Layout\Preload]
+"1"="00000409"
+"2"="00000419"
