@@ -1,5 +1,4 @@
 package main
-
 import (
 	"bufio"
 	"flag"
@@ -7,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-
 	// "sync"
 	"syscall"
 	"time"
@@ -31,20 +29,17 @@ var isLocal bool
 func getTime() time.Time {
 	if isLocal {
 		return time.Now()
-	} else {
-		return time.Now().UTC()
 	}
+	return time.Now().UTC()
 }
 
 func getLoc() *time.Location {
 	if isLocal {
 		return time.Local
-	} else {
-		return time.UTC
 	}
+	return time.UTC
 }
 
-// readCommands 从文件中读取命令
 func readCommands(filename string) ([]*Command, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -159,7 +154,7 @@ func checkConditionA(commands []*Command) bool {
 		}
 		_, _, err := parseLog(cmd.Log)
 		if err != nil {
-			fmt.Println("[warn] parseLog ", err)
+			// fmt.Println("[warn] parseLog ", err)
 			return false
 		}
 	}
@@ -169,7 +164,7 @@ func checkConditionA(commands []*Command) bool {
 // findStoppedCommand 查找已停止的命令
 func findStoppedCommand(commands []*Command) *Command {
 	for _, cmd := range commands {
-		isProcessErr := strings.Contains(cmd.Log, "(error) Error UNKNOWN")
+		isProcessErr := strings.Contains(cmd.Log, "Error UNKNOWN")
 		if !isProcessAlive(cmd.Cmd) || isProcessErr {
 			return cmd
 		}
@@ -298,18 +293,20 @@ func main() {
 	fmt.Println("=========进入主循环")
 	// 主循环
 	for {
-		for !checkConditionA(commands) {
-			time.Sleep(1 * time.Minute)
-		}
-
 		stoppedCmd := findStoppedCommand(commands)
 		if stoppedCmd != nil {
+			fmt.Printf("[Main Loop] Found stopped/errored process %d. Restarting...\n", stoppedCmd.Line)
 			err := restartCommand(stoppedCmd)
 			if err != nil {
 				fmt.Println("Error restarting command:", err)
-				return
+				return // exit when err
 			}
-			time.Sleep(1 * time.Second)
+			time.Sleep(5 * time.Second)
+			continue
+		}
+
+		if !checkConditionA(commands) {
+			time.Sleep(10 * time.Second)
 			continue
 		}
 
