@@ -9,6 +9,7 @@ OUTPUT_PATH="catfs.txt"
       echo
       echo "\`\`\`${file##*.}"
       cat "$file"
+      echo
       echo "\`\`\`"
       echo
     fi
