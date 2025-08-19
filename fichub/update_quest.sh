@@ -3,7 +3,7 @@
 BOOK_LIST_URL="https://github.com/cxumol/misc_script/raw/refs/heads/master/fichub/watchlist.json"
 UA_API="http://headers.scrapeops.io/v1/user-agents?api_key=6ed5ed82-1938-4ba2-9495-5291c4596945"
 
-book_urls=$(curl -sSL "$BOOK_LIST_URL" | jq -r '.[]')
+book_urls=$(curl --compressed -sSL "$BOOK_LIST_URL" | jq -r '.[]')
 user_agents=($(curl -sSL "$UA_API" | jq -r '.result[]'))
 
 num_uas=${#user_agents[@]}
