@@ -8,4 +8,8 @@
   var debounce=(f,d)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),d)}}, throttle=(f,d)=>{let t=false;return(...a)=>{if(t)return;t=true;f(...a);setTimeout(()=>t=false,d)}}, store=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)):localStorage.setItem(k,JSON.stringify(v));
   var log = console.log;
 </script>
+<script>
+  function json2yaml(c){typeof c=="string"&&(c=JSON.parse(c));const l=n=>Array.isArray(n)?"array":n===null?"null":["string","boolean","number","undefined"].includes(typeof n)?typeof n:"hash",t=n=>/^[\w]+$/.test(n)?n:JSON.stringify(n),a=(n,e)=>{switch(l(n)){case"array":return h(n,e);case"hash":return p(n,e);case"string":return f(n,e);case"null":return e.push("null");case"number":return e.push(String(n));case"boolean":return e.push(n?"true":"false")}},h=(n,e)=>{if(n.length===0)return e.push("[]");n.forEach(r=>{const s=[];a(r,s),s.forEach((i,g)=>e.push((g?"  ":"- ")+i))})},p=(n,e)=>{Object.keys(n).forEach(r=>{const s=[];a(n[r],s),["string","null","number","boolean"].includes(l(n[r]))?e.push(`${t(r)}: ${s[0]}`):(e.push(`${t(r)}:`),s.forEach(i=>e.push("  "+i)))})},f=(n,e)=>e.push(t(n)),u=[];return a(c,u),u.join(`
+`)}
+</script>
 </body></html>
