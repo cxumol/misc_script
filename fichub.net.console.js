@@ -26,7 +26,7 @@ var fichubToWget = url => fetch(`https://fichub.net/api/v0/epub?q=${encodeURICom
   console.log(data.info);
   var fullEpubUrl = `https://fichub.net${data.epub_url}`;
   var baseFileName = new URL(fullEpubUrl).pathname.split('/').pop().split('-').slice(0, -1).join('-') + `_${data.meta?.chapters}chs.epub`;
-  var ans = `wget "${fullEpubUrl}" -O "${baseFileName}"`;console.log(ans);return ans;
+  var ans = `wget -O "${baseFileName}" "${fullEpubUrl}"`;console.log(ans);return ans;
 });
 var url = '';
 fichubToWget(url).then(cmd => copy(cmd));
